@@ -45,8 +45,60 @@ Every change to the structure of your database needs a migration.
 "It's git for your database structure." 
 Now you always have your database AND your code in sync with ONE command.
 
-Steps for migration:
+[Steps for migration]:
 
-npx knex init
+1.) Run:
 
-Instead of having your configuration in your app, instead you have a dedicated file to hold all your knex configuration.
+    npx knex init
+
+Instead of having your configuration in your app, instead you now have a dedicated file to hold all your knex configuration.
+
+2.) Run:
+
+    npx knex migrate:make create_roles_table
+
+After you created the migration, you can use npx knex to see a list of commands.
+
+3.) Go into your newly created migration file.
+
+//new changes to the database schema
+exports.up = function(knex, Promise) {
+    return knex.schema.createTable('roles', function(table) {
+        //primary key is called id, auto-increments, and is an integer
+        table.increments();
+
+        //var char called name, 128, unique, not null
+        table
+            .string('name', 128)
+            .notNullable()
+            .unique();
+    });
+};
+
+//how to undo the changes to the schema
+exports.down = function(knex, Promise) {
+    return knex.schema.dropTableIfExists('roles');
+};
+
+4.) Run:
+
+    npx knex migrate:latest
+
+To migrate to latest. And:
+
+    npx knex migrate:rollback
+
+To migrate to the previous.
+
+5.) To have dummy data (seeds):
+
+    npx knex seed:make 001-roles
+
+So a seeds folder will show up and will have a table of example data, like so:
+
+exports.seed = function(knex, Promise) {}
+
+
+
+
+
