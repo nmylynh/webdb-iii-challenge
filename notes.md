@@ -135,7 +135,7 @@ exports.up = function(knex, Promise) {
         table
             .integer('role_id')
             .unsigned()
-            .references('id)
+            .references('id')
             .inTable('roles')
             .onDelete('CASCADE')
             .onUpdate('CASCADE');
