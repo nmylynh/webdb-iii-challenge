@@ -11,29 +11,29 @@ module.exports = {
 }
 
 function find() {
-    return db('cohorts');
+    return db('students');
 }
 
 function findById(id) {
-    return db('cohorts')
+    return db('students')
     .where({ id })
     .first()
 }
 
-async function add(cohort) {
-const [id] = await db('cohorts').insert(cohort);
+async function add(student) {
+const [id] = await db('students').insert(student);
 
 return findById(id);
 }
 
 function update(id, changes) {
-    return db('cohorts')
+    return db('students')
     .where({ id })
     .update(changes, '*')
 }
 
 function remove(id) {
-    return db('cohorts')
+    return db('students')
     .where({ id })
     .del();
 }
