@@ -2,6 +2,29 @@ const express = require("express");
 const router = express.Router();
 const cohortsDB = require('../data/cohorts-model');
 
+//middleware
+
+const validateCohortID = async (req, res, next) => {
+    try {
+    const {id} = req.params;
+    const cohort = await cohortsDB.findById(id);
+
+    cohort 
+    ? next()
+    : res.status(404).json({message: "invalid id"});  
+    } catch(err) {
+        res.status(400).json({message: "missing cohort id"});
+    }
+}
+
+const validateCohortBody = (req, res, next) => {
+    const { name } = req.body;
+
+    name 
+    ? next() 
+    : res.status(400).json({message: "missing required name field"});
+};
+
 //endpoints
 
 router.get('/', async (req, res) => {
@@ -27,7 +50,7 @@ router.get('/:id', async (req, res) => {
 }); 
 
 
-router.post('/', async (req, res) => {
+router.post('/', validateCohortBody, async (req, res) => {
     try {
         const newCohort = await cohortsDB.add(req.body);
 
@@ -37,7 +60,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', validateCohortBody, validateCohortID, async (req, res) => {
     try {
         const {id} = req.params;
         const updateCohort = await cohortsDB.update(id, req.body);
@@ -50,7 +73,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', validateCohortID, async (req, res) => {
     try {
         const {id} = req.params;
         const success = await cohortsDB.remove(id);
