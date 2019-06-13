@@ -96,7 +96,18 @@ To migrate to the previous.
 
 So a seeds folder will show up and will have a table of example data, like so:
 
-exports.seed = function(knex, Promise) {}
+exports.seed = function(knex, Promise) {
+    return knex('roles')
+        .truncate() //reset the PK back to 1 in addition to deleting the data
+        .then(function () {
+            //insert seed entries
+            return knex('roles').insert([
+                {name: 'Student'},
+                {name: 'TA'},
+                {name: 'PM'}
+            ]);
+        });
+};
 
 
 
