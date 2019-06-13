@@ -109,6 +109,62 @@ exports.seed = function(knex, Promise) {
         });
 };
 
+6.) Run your seed:
+
+    npx knex seed:run
+
+7.) For foreign keys:
+
+    npx knex migrate:make users_table
+
+Then, go to the users table migration:
+
+
+exports.up = function(knex, Promise) {
+    return knex.schema.createTable('users', function(table) {
+
+        table.increments();
+
+        table
+            .string('name', 128)
+            .notNullable()
+            .unique();
+
+        //syntax for foreign key
+
+        table
+            .integer('role_id')
+            .unsigned()
+            .references('id)
+            .inTable('roles')
+            .onDelete('CASCADE')
+            .onUpdate('CASCADE');
+    });
+};
+
+exports.down = function(knex, Promise) {
+    return knex.schema.dropTableIfExists('users');
+};
+
+8.) Then update the knexfile configuration to include migrations and seeds.
+
+
+module.exports = {
+    development: {
+        client: 'sqlite3',
+        connection: {
+            filename: './data/new.db3',
+        },
+         useNullAsDefault: true,
+        migrations: {
+            directory: './data/migrations'
+         },
+         seeds: {
+            directory: './data/seeds'
+        }
+    },
+}
+
 
 
 
