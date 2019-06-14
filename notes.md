@@ -1,4 +1,4 @@
-~Querying Data, Migrations, and Seeding~
+Querying Data, Migrations, and Seeding
 
 A [foreign key] is a column in a table that references the primary key on another table.
 
